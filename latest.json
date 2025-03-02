@@ -1,11 +1,11 @@
 {
-  "version": "0.5.0",
-  "notes": "This is the initial release",
-  "pub_date": "2025-03-01T23:18:57Z",
+  "version": "0.5.5",
+  "notes": "This is the second release",
+  "pub_date": "2025-03-01T23:19:57Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTdnlRS0pkYUtuTGgxT0ZiYmhUWUlFQXlYWFh1b05HeWlLQkk5cjZJYk8yaGtGU0tpK3h3TzdLODZLbHIweW1YVUw0WlB0THNjanljZjJ1am1VNTVnRUFsWU92elkxbHdjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQwODgxNDI0CWZpbGU6dGF1cmktdXBkYXRlcl8wLjUuMF94NjRfZW4tVVMubXNpCmJSb2ZTMDJlaE9TSGVHZnk2NjdRNXNGd3BOMS9QUWlFQUpwQmlJZEdrU3VmWGJxNDAxQmpRU3hRa01ObEMwS2xaU1A2c0pMVW14OHZDaWs1cWpDZEN3PT0K",
-      "url": "https://github.com/kfilip10/tauri-update-app/releases/download/0.0.2/tauri-updater_0.0.2_x64_en-US.msi"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTdnlRS0pkYUtuTG01SDRWRVovY1BSMmdTU05Fdkd1czJqQlJRR0hSa0x0cmVYZDRVRkFBYWtLa0tXS0pkb3ZLV1dGRUEvNWowOW5sT2F5aXNUNkVuWHhKYm1tQzUrY2dvPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQwODgyNzM5CWZpbGU6dGF1cmktdXBkYXRlcl8wLjUuNV94NjRfZW4tVVMubXNpClhBUEwrSVova2o2aVdidWJMdWQvako5UVVRUzVudnBSMHdvZ1IzSzUzaWE3anluVGQ3d1MwZmsrSlhPZ3AzMDVYZDgyVFB1SDlSR1hCNDhPY1ZyUERBPT0K",
+      "url": "https://github.com/kfilip10/grade-tool-tauri/releases/download/0.5.5/tauri-updater_0.5.5_x64_en-US.msi"
     }
   }
 }

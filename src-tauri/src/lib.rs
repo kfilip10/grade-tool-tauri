@@ -125,9 +125,6 @@ pub fn run() {
             update::download_and_install_update,
             update::get_update_progress,
             r_shiny::start_r_shiny, // Register R Shiny commands
-            r_shiny::stop_r_shiny,
-            r_shiny::get_rscript_path,
-            r_shiny::test_r_script, // Add this line
         ])
         .run(tauri::generate_context!())
         .expect("error while running Tauri application");

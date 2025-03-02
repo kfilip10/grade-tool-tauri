@@ -1,6 +1,8 @@
 use lazy_static::lazy_static;
 use reqwest::blocking::Client;
 use std::net::{TcpListener, TcpStream};
+#[cfg(target_os = "windows")]
+use std::os::windows::process::CommandExt;
 use std::process::{Child, Command, Stdio};
 use std::time::Duration;
 use std::{env, sync::Mutex, thread, time};
@@ -63,7 +65,11 @@ pub fn start_r_shiny(app_handle: tauri::AppHandle) -> Result<String, String> {
                 max_retries
             );
 
-            let process_result = Command::new(&rscript_path)
+            // Create command but don't spawn it yet
+            let mut command = Command::new(&rscript_path);
+
+            // Configure the command with all your arguments
+            command
                 .arg("--vanilla")
                 .arg(&start_shiny_path)
                 .arg("--verbose")
@@ -77,8 +83,17 @@ pub fn start_r_shiny(app_handle: tauri::AppHandle) -> Result<String, String> {
                 .env("R_LIBS_SITE", &r_lib_path)
                 .env("R_LIB_PATHS", &r_lib_path)
                 .stdout(Stdio::piped())
-                .stderr(Stdio::piped())
-                .spawn();
+                .stderr(Stdio::piped());
+
+            // On Windows, add the CREATE_NO_WINDOW flag to hide the console window
+            #[cfg(target_os = "windows")]
+            {
+                const CREATE_NO_WINDOW: u32 = 0x08000000;
+                command.creation_flags(CREATE_NO_WINDOW);
+            }
+
+            // Now spawn the process
+            let process_result = command.spawn();
 
             let (tx_ready, rx_ready) = std::sync::mpsc::channel::<bool>();
             let (tx_stdout, rx_stdout) = std::sync::mpsc::channel::<String>();
@@ -236,103 +251,4 @@ pub fn start_r_shiny(app_handle: tauri::AppHandle) -> Result<String, String> {
         .unwrap_or_else(|e| eprintln!("Failed to emit error event: {}", e));
 
     Err("Failed to launch Shiny app.".to_string())
-}
-
-/// Stops the running R process.
-#[tauri::command]
-pub fn stop_r_shiny(app_handle: tauri::AppHandle) -> Result<(), String> {
-    let mut process_guard = R_PROCESS.lock().unwrap();
-    if let Some(mut child) = process_guard.take() {
-        match child.kill() {
-            Ok(_) => {
-                // Emit stopped event
-                app_handle
-                    .emit("shiny-stopped", "Shiny app stopped")
-                    .unwrap_or_else(|e| eprintln!("Failed to emit stopped event: {}", e));
-                Ok(())
-            }
-            Err(e) => Err(format!("Failed to stop R: {}", e)),
-        }
-    } else {
-        Err("No R process running".to_string())
-    }
-}
-
-/// Returns the resolved path to `Rscript.exe`
-#[tauri::command]
-pub fn get_rscript_path(app_handle: tauri::AppHandle) -> Result<String, String> {
-    let rscript_path = env::var("RSCRIPT_PATH").expect("RSCRIPT_PATH not set");
-    Ok(rscript_path)
-}
-
-/// Test executing R code directly (avoiding file issues)
-#[tauri::command]
-pub fn test_r_script(app_handle: tauri::AppHandle) -> Result<String, String> {
-    let rscript_path = env::var("RSCRIPT_PATH").expect("RSCRIPT_PATH not set");
-    let r_home = env::var("R_HOME_DIR").expect("R_HOME_DIR not set");
-    let r_lib_path = env::var("R_LIB_PATH").expect("R_LIB_PATH not set");
-
-    println!("Using Rscript from: {}", rscript_path);
-
-    // Verify the R executable exists
-    if !std::path::Path::new(&rscript_path).exists() {
-        return Err(format!("R executable not found at: {}", rscript_path));
-    }
-
-    // Path to the test script (we'll check if it exists but won't execute it directly)
-    let test_script_path = "H:/1-Git/grade-tool-tauri/src-tauri/assets/test.R";
-    println!("Looking for test script at: {}", test_script_path);
-
-    // Create the test script file if it doesn't exist (for reference)
-    let test_script_exists = std::path::Path::new(test_script_path).exists();
-
-    // Read script content but execute using -e instead of -f
-    match std::fs::read_to_string(&test_script_path) {
-        Ok(contents) => {
-            // Extract only the actual commands (skip comments)
-
-            // Use -e to run the code directly
-            let output = Command::new(&rscript_path)
-                .arg("--vanilla")
-                .arg(test_script_path)
-                .env("RHOME", &r_home)
-                .env("R_HOME_DIR", &r_home)
-                .env("R_LIBS", &r_lib_path)
-                .env("R_LIBS_USER", &r_lib_path)
-                .env("R_LIBS_SITE", &r_lib_path)
-                .env("R_LIB_PATHS", &r_lib_path)
-                .output()
-                .map_err(|e| format!("Failed to execute R code: {}", e))?;
-            println!("R script: {:?}", output);
-            // Convert output to strings
-            let stdout = String::from_utf8_lossy(&output.stdout).to_string();
-            let stderr = String::from_utf8_lossy(&output.stderr).to_string();
-
-            // Log the output
-            println!("R SCRIPT STDOUT: {}", stdout);
-
-            if !stderr.is_empty() {
-                println!("R SCRIPT STDERR: {}", stderr);
-            }
-
-            // Check exit status
-            if output.status.success() {
-                Ok(format!(
-                    "R script executed successfully\nOutput: {}",
-                    stdout
-                ))
-            } else {
-                Err(format!(
-                    "R script execution failed with code: {:?}\nStderr: {}",
-                    output.status.code(),
-                    stderr
-                ))
-            }
-        }
-        Err(e) => {
-            // Fallback to hardcoded commands if file read fails
-            println!("Failed to read script: {}. Using hardcoded commands.", e);
-            Err(format!("Failed to read script: {}", e))
-        }
-    }
 }
