@@ -2,19 +2,27 @@
 	import { browser } from '$app/environment';
 	import { Alert, Button, Spinner, Card, Progressbar } from 'flowbite-svelte';
 	import UpdateProgress from '$lib/components/UpdateProgress.svelte';
+	import StepIndicator from '$lib/components/StepIndicator.svelte';
 	import { onMount, onDestroy } from 'svelte';
 	import { invoke } from '@tauri-apps/api/core';
 	import { getCurrentWindow } from '@tauri-apps/api/window';
+	import { stopShinyApp } from '$lib/utils/shiny';
+	import {
+		initializeApp,
+		initStatus,
+		initMessage,
+		initError,
+		updateCheckStatus,
+		shinyLaunchStatus,
+		resetStepStatuses
+	} from '$lib/utils/initialization';
+	import { shinyStatus, shinyUrl, shinyError, initShinyListeners } from '$lib/utils/shinyListener';
 
 	import {
 		updateProgressVisible,
 		handleUpdateComplete,
 		handleUpdateError
 	} from '$lib/utils/updater';
-
-	import { launchShinyApp, stopShinyApp } from '$lib/utils/shiny';
-	import { initializeApp, initStatus, initMessage, initError } from '$lib/utils/initialization';
-	import { shinyStatus, shinyUrl, shinyError, initShinyListeners } from '$lib/utils/shinyListener';
 
 	let mode = 'updater';
 	let passedShinyUrl: string | null = null;
@@ -38,7 +46,6 @@
 
 	let rscriptPath = '';
 	let autoLaunchShiny = true;
-	let iframeEl: HTMLIFrameElement;
 
 	async function fetchRscriptPath() {
 		if (!browser) return; // Skip on server
@@ -53,6 +60,7 @@
 
 	// Start updater flow
 	function startUpdater() {
+		resetStepStatuses();
 		initializeApp();
 	}
 
@@ -64,17 +72,28 @@
 		await fetchRscriptPath();
 
 		const appWindow = getCurrentWindow();
+
 		appWindow.onCloseRequested(async (event) => {
+			event.preventDefault(); // Always prevent immediate closing
+
+			// First stop browser monitoring
+			stopBrowserMonitoring();
+
+			// Then check if Shiny is running and stop it
 			if ($shinyStatus === 'running') {
-				event.preventDefault(); // Prevent closing until Shiny is stopped
 				try {
 					await stopShinyApp();
-					setTimeout(() => appWindow.close(), 500);
+					console.log('Shiny app stopped during window close');
 				} catch (e) {
 					console.error('Error stopping Shiny on close:', e);
-					appWindow.close(); // Close anyway if there's an error
 				}
 			}
+
+			// Finally close the window after a short delay
+			setTimeout(() => {
+				console.log('Now closing Tauri window');
+				appWindow.close();
+			}, 500);
 		});
 
 		// Auto-start updater flow if in updater mode
@@ -109,15 +128,30 @@
 	<main class="p-4">
 		<h1 class="mb-4 text-2xl font-bold">Grade Tool Setup</h1>
 
-		<!-- Initialization Status -->
-		{#if $initStatus === 'starting' || $initStatus === 'checking-updates'}
+		<!-- Multi-step initialization status -->
+		{#if $initStatus === 'starting' || $initStatus === 'checking-updates' || $initStatus === 'launching-shiny'}
 			<Card padding="xl" class="mb-4">
-				<div class="flex items-center space-x-4">
-					<Spinner size="6" />
-					<div>
-						<h3 class="font-semibold">{$initMessage}</h3>
-						<p class="text-sm text-gray-500">Please wait while we get things ready...</p>
-					</div>
+				<h3 class="mb-4 font-semibold">Initializing Application</h3>
+
+				<!-- Update check step -->
+				<StepIndicator
+					status={$updateCheckStatus}
+					text="Checking for updates"
+					showSpinner={$initStatus === 'checking-updates'}
+				/>
+
+				<!-- Shiny launch step -->
+				<StepIndicator
+					status={$shinyLaunchStatus}
+					text="Launching Shiny server"
+					showSpinner={$initStatus === 'launching-shiny'}
+				/>
+
+				<!-- Current status message -->
+				<div class="mt-4 border-t border-gray-100 pt-3">
+					<p class="text-sm text-gray-600">
+						{$initMessage}
+					</p>
 				</div>
 			</Card>
 		{:else if $initStatus === 'downloading-update'}
@@ -130,18 +164,6 @@
 			<Alert color="yellow" class="mb-4">
 				<span class="font-medium">{$initMessage}</span>
 			</Alert>
-		{:else if $initStatus === 'launching-shiny'}
-			<Card padding="xl" class="mb-4">
-				<div class="flex items-center space-x-4">
-					<Spinner size="6" />
-					<div>
-						<h3 class="font-semibold">Launching Shiny application...</h3>
-						<p class="text-sm text-gray-500">Starting R and loading packages...</p>
-					</div>
-				</div>
-			</Card>
-
-			<!-- Add this section after the 'launching-shiny' state -->
 		{:else if $initStatus === 'shiny-ready'}
 			<Card padding="xl" class="mb-4">
 				<div class="text-center">
@@ -154,16 +176,13 @@
 					<div class="mb-4 rounded-md border border-blue-200 bg-blue-50 p-3 text-left">
 						<h4 class="mb-1 font-medium text-blue-800">Important:</h4>
 						<p class="text-sm text-blue-600">
-							This window monitors your Shiny session. Keep it open while using the app. When you
-							close the browser tab, this window will automatically stop the Shiny process.
+							This window monitors your Shiny session. When you close the browser tab, this
+							application will automatically stop the Shiny process.
 						</p>
 					</div>
 
-					<!-- Add buttons for common actions -->
+					<!-- Only keep the Stop Application button -->
 					<div class="flex justify-center gap-2">
-						<Button color="blue" on:click={() => $shinyUrl && open($shinyUrl)}>
-							Reopen in Browser
-						</Button>
 						<Button color="red" on:click={stopShinyApp}>Stop Application</Button>
 					</div>
 				</div>

@@ -22,9 +22,7 @@ export async function openBrowserWindow(shinyUrl: string): Promise<void> {
     await open(shinyUrl);
     
     // Hide the Tauri window after opening the browser
-    const currentWindow = getCurrentWindow();
-    await currentWindow.hide();
-    console.log("Tauri window hidden");
+    await hideCurrentWindow();
     
     // Set up a periodic check for browser closure
     setupBrowserMonitoring(shinyUrl);
@@ -90,23 +88,33 @@ function setupBrowserMonitoring(shinyUrl: string): void {
         
         // Only stop if Shiny is still running according to our state
         if (get(shinyStatus) === 'running') {
-          // Update UI first
-          initStatus.set('starting');
+        // Update UI first
+        initStatus.set('starting');
+        
+        // Then stop the app
+        try {
+          await stopShinyApp(); // Make sure to await this
+          console.log("Shiny app stopped, closing Tauri window");
           
-          // Then stop the app
-          stopShinyApp().catch(err => {
-            console.error("Error stopping Shiny app:", err);
-          });
-          
-          // Optionally close the Tauri window
-          // Uncomment this if you want the Tauri app to close when browser closes
-           setTimeout(() => {
-             getCurrentWindow().close();
-           }, 500);
+          // Close the Tauri window after a delay to ensure cleanup
+          setTimeout(() => {
+            try {
+              console.log("Closing Tauri window now");
+              const window = getCurrentWindow();
+              window.close();
+            } catch (err) {
+              console.error("Error closing Tauri window:", err);
+            }
+          }, 1000); // Give a slightly longer delay (1 second)
+        } catch (err) {
+          console.error("Error stopping Shiny app:", err);
+          // Still try to close the window even if stopping Shiny fails
+          setTimeout(() => getCurrentWindow().close(), 1000);
+        }
         }
       }
     }
-  }, 100);
+  }, 2000);
 }
 
 /**
@@ -133,5 +141,29 @@ export async function closeCurrentWindow(): Promise<void> {
     await currentWindow.close();
   } catch (e) {
     console.error('Error closing current window:', e);
+  }
+}
+/**
+ * Shows the current window and optionally brings it to front
+ */
+export async function showCurrentWindow(): Promise<void> {
+  try {
+    const currentWindow = getCurrentWindow();
+    await currentWindow.show();
+    await currentWindow.setFocus();
+  } catch (e) {
+    console.error('Error showing window:', e);
+  }
+}
+
+/**
+ * Hides the current window
+ */
+export async function hideCurrentWindow(): Promise<void> {
+  try {
+    const currentWindow = getCurrentWindow();
+    await currentWindow.hide();
+  } catch (e) {
+    console.error('Error hiding window:', e);
   }
 }

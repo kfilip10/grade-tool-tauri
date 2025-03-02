@@ -37,9 +37,9 @@ export async function checkForUpdates() {
     
     if (!updateInfo.available) {
       console.log('No update available');
-      await message('You are running the latest version.', {
-        title: 'No Update Available'
-      });
+      //await message('You are running the latest version.', {
+      //  title: 'No Update Available'
+      //});
       return;
     }
     

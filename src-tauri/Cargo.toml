@@ -1,6 +1,6 @@
 [package]
 name = "Grade-Tool-Tauri"
-version = "0.5.5"
+version = "0.5.0"
 description = "Grade Analysis Tool"
 authors = ["Kevin"]
 license = ""
