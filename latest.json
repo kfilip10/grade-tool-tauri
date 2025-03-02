@@ -1,10 +1,10 @@
 {
-  "version": "0.0.2",
-  "notes": "Your Release Notes go he222r!!!! !  e",
-  "pub_date": "2025-02-28T17:18:57Z",
+  "version": "0.5.0",
+  "notes": "This is the initial release",
+  "pub_date": "2025-03-01T23:18:57Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTWkZvRStkRXNsMmE5b2IyMVBvN21xaGh4ajVldlg5NkFWREw5czFWVnJjTGxrSkZEWVhyOEtybllTSVI2Rm9vS21FblVrY1AySVpiYkF4eTdCWk1wSjkzV2lHdUZJdndZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQwNzkwMDA5CWZpbGU6dGF1cmktdXBkYXRlcl8wLjAuMl94NjRfZW4tVVMubXNpCjN6V1FCb0hxSUZ2Y3F3a0RCQVZPTzhiK0FYTXpvMFdvS0UrWlNmbWRDQm5GUDdUMXo4OWVTY3BDOURDUUkxaEFlZTV0L1V2blk4N3VlRGt0N2NCMkRnPT0K",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTdnlRS0pkYUtuTGgxT0ZiYmhUWUlFQXlYWFh1b05HeWlLQkk5cjZJYk8yaGtGU0tpK3h3TzdLODZLbHIweW1YVUw0WlB0THNjanljZjJ1am1VNTVnRUFsWU92elkxbHdjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQwODgxNDI0CWZpbGU6dGF1cmktdXBkYXRlcl8wLjUuMF94NjRfZW4tVVMubXNpCmJSb2ZTMDJlaE9TSGVHZnk2NjdRNXNGd3BOMS9QUWlFQUpwQmlJZEdrU3VmWGJxNDAxQmpRU3hRa01ObEMwS2xaU1A2c0pMVW14OHZDaWs1cWpDZEN3PT0K",
       "url": "https://github.com/kfilip10/tauri-update-app/releases/download/0.0.2/tauri-updater_0.0.2_x64_en-US.msi"
     }
   }
