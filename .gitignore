@@ -1,0 +1,20 @@
+# Ignore all key files anywhere in the repository
+*.key
+
+# Ignore public key files
+*.key.pub
+*.code-workspace
+
+# Ignore .env files which might contain sensitive information
+.env
+
+# Ignore the .tauri directory entirely if preferred
+.tauri/
+
+# Additional common ignores for Tauri projects
+target/
+dist/
+node_modules/
+.DS_Store
+
+r-win

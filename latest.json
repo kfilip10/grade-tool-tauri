@@ -1,0 +1,11 @@
+{
+  "version": "0.0.2",
+  "notes": "Your Release Notes go he222r!!!! !  e",
+  "pub_date": "2025-02-28T17:18:57Z",
+  "platforms": {
+    "windows-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTWkZvRStkRXNsMmE5b2IyMVBvN21xaGh4ajVldlg5NkFWREw5czFWVnJjTGxrSkZEWVhyOEtybllTSVI2Rm9vS21FblVrY1AySVpiYkF4eTdCWk1wSjkzV2lHdUZJdndZPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQwNzkwMDA5CWZpbGU6dGF1cmktdXBkYXRlcl8wLjAuMl94NjRfZW4tVVMubXNpCjN6V1FCb0hxSUZ2Y3F3a0RCQVZPTzhiK0FYTXpvMFdvS0UrWlNmbWRDQm5GUDdUMXo4OWVTY3BDOURDUUkxaEFlZTV0L1V2blk4N3VlRGt0N2NCMkRnPT0K",
+      "url": "https://github.com/kfilip10/tauri-update-app/releases/download/0.0.2/tauri-updater_0.0.2_x64_en-US.msi"
+    }
+  }
+}

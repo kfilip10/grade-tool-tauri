@@ -1,0 +1,38 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "enables the default permissions",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "updater:default",
+    "updater:allow-check",
+    "updater:allow-download-and-install",
+    "os:default",
+    "dialog:default",
+    "dialog:allow-ask",
+    "dialog:allow-message",
+    "http:default",
+    "http:allow-fetch",
+    "http:allow-fetch-cancel",
+    "http:allow-fetch-read-body",
+    "http:allow-fetch-send",
+    "fs:allow-read",
+    "fs:allow-write",
+    "fs:allow-mkdir",
+    "core:window:allow-close",
+    "core:window:allow-create",
+    "core:window:allow-destroy",
+    "core:window:allow-maximize",
+    "core:window:allow-hide",
+    {
+      "identifier": "fs:default",
+      "allow": [
+        {
+          "path": "H:/1-Git/grade-tool-tauri/src-tauri/assets/r-win/bin/Rscript.exe",
+          "kind": "binary"
+        }
+      ]
+    }
+  ]
+}
