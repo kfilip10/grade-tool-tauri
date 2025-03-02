@@ -252,3 +252,37 @@ pub fn start_r_shiny(app_handle: tauri::AppHandle) -> Result<String, String> {
 
     Err("Failed to launch Shiny app.".to_string())
 }
+
+#[tauri::command]
+pub fn stop_r_shiny(app_handle: tauri::AppHandle) -> Result<(), String> {
+    let mut process_guard = R_PROCESS.lock().unwrap();
+    if let Some(mut child) = process_guard.take() {
+        // On Windows, try using taskkill to ensure all child processes are terminated
+        #[cfg(target_os = "windows")]
+        {
+            let pid = child.id();
+            std::process::Command::new("taskkill")
+                .args(&["/F", "/T", "/PID", &pid.to_string()])
+                .status()
+                .map_err(|e| format!("Failed to run taskkill: {}", e))?;
+        }
+
+        // Then try the standard kill method, mapping ExitStatus to ()
+        // Then try the standard kill method
+        match child.kill() {
+            Ok(_) => {
+                // Wait for process to exit
+                let _ = child.wait();
+                println!("R process successfully terminated");
+            }
+            Err(e) => {
+                println!("Kill failed (process may already be terminated): {}", e);
+            }
+        }
+        println!("Exiting application...");
+        app_handle.exit(0);
+        Ok(())
+    } else {
+        Err("No R process running".to_string())
+    }
+}

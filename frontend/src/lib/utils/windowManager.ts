@@ -1,8 +1,9 @@
-import { getCurrentWindow } from '@tauri-apps/api/window';
+import { getCurrentWindow, getAllWindows } from '@tauri-apps/api/window';
 import { stopShinyApp } from './shiny';
 import { shinyStatus, shinyUrl } from './shinyListener';
 import { get } from 'svelte/store';
 import { initStatus } from './initialization';
+import { exit } from '@tauri-apps/plugin-process'; // Add this import for exit
 
 // Flag to track if monitoring is active
 let isMonitoring = false;
@@ -93,28 +94,35 @@ function setupBrowserMonitoring(shinyUrl: string): void {
         
         // Then stop the app
         try {
-          await stopShinyApp(); // Make sure to await this
-          console.log("Shiny app stopped, closing Tauri window");
+          // Stop Shiny
+          await stopShinyApp();
+          console.log("Shiny app stopped successfully");
           
-          // Close the Tauri window after a delay to ensure cleanup
-          setTimeout(() => {
+          // Force quit the app after a delay
+          setTimeout(async () => {
             try {
-              console.log("Closing Tauri window now");
-              const window = getCurrentWindow();
-              window.close();
-            } catch (err) {
-              console.error("Error closing Tauri window:", err);
+              console.log("Now closing all windows");
+              await closeAllWindows();
+              
+              // As a last resort, force exit
+              setTimeout(() => {
+                console.log("Forcing application exit");
+                exit(0);
+              }, 500);
+            } catch (closeErr) {
+              console.error("Error closing windows:", closeErr);
+              exit(0); // Still try to exit
             }
-          }, 1000); // Give a slightly longer delay (1 second)
-        } catch (err) {
-          console.error("Error stopping Shiny app:", err);
-          // Still try to close the window even if stopping Shiny fails
-          setTimeout(() => getCurrentWindow().close(), 1000);
+          }, 1000);
+        } catch (stopErr) {
+          console.error("Error stopping Shiny app:", stopErr);
+          // Still try to close
+          exit(0);
         }
         }
       }
     }
-  }, 2000);
+  }, 500);
 }
 
 /**
@@ -165,5 +173,22 @@ export async function hideCurrentWindow(): Promise<void> {
     await currentWindow.hide();
   } catch (e) {
     console.error('Error hiding window:', e);
+  }
+}
+
+async function closeAllWindows(): Promise<void> {
+  try {
+    console.log("Closing all Tauri windows");
+    
+    // Get all windows
+    const allWindows = await getAllWindows();
+    
+    // Close each window
+    for (const window of allWindows) {
+      console.log(`Closing window: ${window.label}`);
+      await window.close();
+    }
+  } catch (err) {
+    console.error("Error closing all windows:", err);
   }
 }
