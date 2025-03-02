@@ -1,10 +1,10 @@
 {
-  "version": "0.5.5",
+  "version": "0.5.6",
   "notes": "This is the second release",
   "pub_date": "2025-03-02T09:19:57Z",
   "platforms": {
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTdnlRS0pkYUtuTHVNZGxUbkRRVy93bXFGN3dKYkZxMHcrcDVUc1MzV3VSNlFDMUtVVzhLa01aM2taQnNnb05CdG9JWmE0VnZQREQwQi9RZ0U4OURxN0ZhWTZOSVhsdmdNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQwOTI4MTE0CWZpbGU6Z3JhZGUtdG9vbC10YXVyaV8wLjUuNV94NjRfZW4tVVMubXNpClpMMkhIVUQ1elJRM0Z4SGh2a1ljMHd3V2l1RVBhSS9GQnpUQWZaQnBPVFZBVVNJWnlBNDUwUTFyN2xIQ05HTXZDNFFUbEdKM3NLdUQ1cVdjY0d1WkNRPT0K",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTdnlRS0pkYUtuTGh3QThvTWk1NE1SVkphbndHV2NtN3IzQ3hRRGE1UlpqOUxKUzB2bGI0SWR3c0RIaXNwN01uK2J6QkpLTlRWNlh2V3NYMkd5ejdVV1RQZWRVZW4yUUF3PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzQwOTI4OTYxCWZpbGU6Z3JhZGUtdG9vbC10YXVyaV8wLjUuNV94NjRfZW4tVVMubXNpCkZ0SW4vSTNtaUNyNlRJMkNpTXhVQjIzZ25nNFFIRHpSbkFFMmNoUFArN1lDQ0dGaEd4Y2NFUXZabjUwRENPZHZZdGtsbnNsdzZYN2sxUk9laUZjY0FnPT0K",
       "url": "https://github.com/kfilip10/grade-tool-tauri/releases/download/0.5.5/grade-tool-tauri_0.5.5_x64_en-US.msi"
     }
   }

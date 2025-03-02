@@ -48,6 +48,7 @@ export async function checkForUpdates() {
       `A new version (${updateInfo.version}) is available.\n\n` +
       `Release notes:\n${updateInfo.body || 'No release notes'}\n\n` +
       `Published on: ${updateInfo.date || 'Unknown date'}\n\n` +
+      `Url: ${updateInfo.downloadUrl || 'Unknown URL'}\n\n` +
       'Would you like to update now?',
       {
         title: 'Update Available',
