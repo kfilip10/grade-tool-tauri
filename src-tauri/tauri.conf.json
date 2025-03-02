@@ -52,7 +52,7 @@
       "active": true,
       "installMode": "basicUi",
       "endpoints": [
-        "https://github.com/kfilip10/grade-tool-tauri/releases/latest/download/latest.json"
+        "https://raw.githubusercontent.com/kfilip10/grade-tool-tauri/refs/heads/master/latest.json"
       ],
       "dialog": true,
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDJFQTdBMjc1ODkwMkM5QUYKUldTdnlRS0pkYUtuTG9lYXhZeEtvcGlRU2lWRis2c3hSMHd4QTNaTjhQVkR1UlFvN3J5N3lIT3AK"
